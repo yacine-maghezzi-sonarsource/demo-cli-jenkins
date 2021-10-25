@@ -16,6 +16,10 @@ banditTool = 'bandit'
 
 pipeline {
   agent any
+  environment {
+      SONAR_HOST_URL  = credentials('SONAR_HOST_URL')
+      SONAR_TOKEN     = credentials('SONAR_TOKEN')
+  }
   stages {
     stage('Code Checkout') {
       steps {
