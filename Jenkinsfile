@@ -1,3 +1,6 @@
+projectKey = "demo:github-jenkins-cli"
+tags = "github,jenkins,cli"
+
 buildDir = "build"
 pylintReport = "${buildDir}/pylint-report.out"
 banditReport = "${buildDir}/bandit-report.json"
@@ -13,6 +16,10 @@ banditTool = 'bandit'
 
 pipeline {
   agent any
+  environment {
+      SONAR_HOST_URL  = credentials('SONAR_HOST_URL')
+      SONAR_TOKEN     = credentials('SONAR_TOKEN')
+  }
   stages {
     stage('Code Checkout') {
       steps {
@@ -44,7 +51,10 @@ pipeline {
         withSonarQubeEnv('SQ Latest') {
           script {
             def scannerHome = tool 'SonarScanner';
-            sh "cd comp-cli; ${scannerHome}/bin/sonar-scanner"
+            sh """
+              cd comp-cli; ${scannerHome}/bin/sonar-scanner
+              curl -X POST -u $SONAR_TOKEN: \"$SONAR_HOST_URL/api/project_tags/set?project=${projectKey}&tags=${tags}\"
+            """
           }
         }
       }
