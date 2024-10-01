@@ -53,7 +53,7 @@ pipeline {
             def scannerHome = tool 'SonarScanner';
             sh """
               cd comp-cli; ${scannerHome}/bin/sonar-scanner
-              curl -X POST -u $SONAR_TOKEN: \"$SONAR_HOST_URL/api/project_tags/set?project=${projectKey}&tags=${tags}\"
+              curl -X POST -u $SONAR_TOKEN: \"HTTP://localhost:9000/api/qualitygates/project_status?projectKey=${projectKey}\"
             """
           }
         }
