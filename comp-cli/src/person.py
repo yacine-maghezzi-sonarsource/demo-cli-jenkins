@@ -1,3 +1,4 @@
+import os
 import socket
 
 SOME_VALUE = 56000
@@ -36,11 +37,11 @@ class Person:
         return self.age > 18
 
     def lock(self):
-        self.password = "donttouch"
+        self.password = os.getenv("PERSON_LOCK_PASSWORD", "")
 
 
 def hotspot(ip):
     if ip is None:
-        ip = '192.168.12.43'
+        ip = os.environ.get('BIND_IP', '0.0.0.0')
     sock = socket.socket()
     sock.bind((ip, 9090))
